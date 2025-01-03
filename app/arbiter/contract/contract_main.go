@@ -233,6 +233,8 @@ func (c *ArbitratorContract) getArbiterOperatorAddress(arbiter common.Address) (
 		return common.Address{}, err
 	}
 	json.Unmarshal(data, &info)
+	fmt.Println("### arbitrator info:", info)
+	fmt.Println("### activeTransactionId:", info.ActiveTransactionID)
 
 	return common.HexToAddress(info.Operator), nil
 }
