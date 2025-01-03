@@ -7,10 +7,10 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 )
 
-type AllEventsReq struct {
-	g.Meta `path:"/events" tags:"All Events" method:"get" summary:"Get all events you have processed."`
+type FailedEventsReq struct {
+	g.Meta `path:"/failed_events" tags:"All Events" method:"get" summary:"Get all events failed."`
 }
 
-type AllEventsRes struct {
+type FailedEventsRes struct {
 	Events []events.EventInfo `json:"events"`
 }

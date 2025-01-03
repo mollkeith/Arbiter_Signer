@@ -17,8 +17,8 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 
 	"github.com/BeL2Labs/Arbiter_Signer/app/arbiter/config"
-	"github.com/BeL2Labs/Arbiter_Signer/app/arbiter/contract/contract_abi"
-	"github.com/BeL2Labs/Arbiter_Signer/app/arbiter/contract/events"
+	"github.com/BeL2Labs/Arbiter_Signer/utility/contract_abi"
+	"github.com/BeL2Labs/Arbiter_Signer/utility/events"
 )
 
 type ArbitratorContract struct {

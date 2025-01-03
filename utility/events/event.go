@@ -21,3 +21,13 @@ type ContractLogEvent struct {
 	Block     uint64
 	TxIndex   uint
 }
+
+type EventInfo struct {
+	EventName         string
+	Block             uint64
+	EventID           string
+	QueryID           string
+	ArbitratorAddress string
+	DappAddress       string
+	Status            string
+}

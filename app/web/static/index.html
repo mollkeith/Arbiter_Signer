@@ -50,24 +50,28 @@
             const response = await fetch(`/api?action=${action}`);
             const data = await response.json();
             const tableBody = document.getElementById('events-body');
+            console.log(tableBody);
             tableBody.innerHTML = '';
 
             if (data.error) {
                 const row = tableBody.insertRow();
                 const cell = row.insertCell(0);
-                cell.colSpan = 3;
+                cell.colSpan = 7;
                 cell.innerHTML = `<p>Error: ${data.error}</p>`;
             } else {
                 data.forEach(event => {
                     const row = tableBody.insertRow();
-                    row.insertCell(0).innerText = event.event_id;
-                    row.insertCell(1).innerText = event.height;
-                    row.insertCell(2).innerText = event.order_id;
+                    row.insertCell(0).innerText = event.EventName;
+                    row.insertCell(1).innerText = event.Status;
+                    row.insertCell(2).innerText = event.Block;
+                    row.insertCell(3).innerText = event.EventID;
+                    row.insertCell(4).innerText = event.QueryID;
+                    row.insertCell(5).innerText = event.ArbitratorAddress;
+                    row.insertCell(6).innerText = event.DappAddress;
                 });
             }
         }
 
-        // 自动调用获取事件
         window.onload = function () {
             fetchEvents();
         };
@@ -79,9 +83,13 @@
     <table>
         <thead>
             <tr>
+                <th>Event Name</th>
+                <th>Status</th>
+                <th>Block</th>
                 <th>Event ID</th>
-                <th>Height</th>
-                <th>Order ID</th>
+                <th>Query ID/th>
+                <th>ArbiterAddress</th>
+                <th>DappAddress</th>
             </tr>
         </thead>
         <tbody id="events-body">

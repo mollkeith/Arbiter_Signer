@@ -9,9 +9,9 @@ import (
 	"log"
 	"math/big"
 
-	"github.com/BeL2Labs/Arbiter_Signer/app/arbiter/contract/contract_abi"
 	"github.com/BeL2Labs/Arbiter_Signer/app/arbiter/crypto"
 	"github.com/BeL2Labs/Arbiter_Signer/app/arbiter/crypto/secp256k1"
+	"github.com/BeL2Labs/Arbiter_Signer/utility/contract_abi"
 
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"

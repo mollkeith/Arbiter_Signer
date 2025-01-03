@@ -15,13 +15,13 @@ import (
 	"github.com/gogf/gf/frame/g"
 )
 
-func (c *ControllerV1) SucceedEvents(ctx context.Context, req *v1.SucceedEventsReq) (res *v1.SucceedEventsRes, err error) {
+func (c *ControllerV1) FailedEvents(ctx context.Context, req *v1.FailedEventsReq) (res *v1.FailedEventsRes, err error) {
 	loanABI, err := abi.JSON(strings.NewReader(contract_abi.ArbiterABI))
 	if err != nil {
 		return nil, err
 	}
 
-	filedFilePath := getExpandedPath(consts.SucceedEventFilePath)
+	filedFilePath := getExpandedPath(consts.FailedEventFilePath)
 	failedFiles, err := os.ReadDir(filedFilePath)
 	if err != nil {
 		return nil, err
@@ -60,12 +60,12 @@ func (c *ControllerV1) SucceedEvents(ctx context.Context, req *v1.SucceedEventsR
 			Block:             logEvt.Block,
 			ArbitratorAddress: arbitratorAddress.String(),
 			DappAddress:       dappAddress.String(),
-			Status:            "succeed",
+			Status:            "failed",
 		})
 
 	}
 
-	res = &v1.SucceedEventsRes{
+	res = &v1.FailedEventsRes{
 		Events: evs,
 	}
 	return res, nil

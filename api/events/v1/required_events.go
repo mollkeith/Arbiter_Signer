@@ -1,4 +1,5 @@
 // Copyright (c) 2025 The bel2 developers
+
 package v1
 
 import (
@@ -7,10 +8,10 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 )
 
-type AllEventsReq struct {
-	g.Meta `path:"/events" tags:"All Events" method:"get" summary:"Get all events you have processed."`
+type RequiredEventsReq struct {
+	g.Meta `path:"/required_events" tags:"Required Events" method:"get" summary:"Get all events you have processed."`
 }
 
-type AllEventsRes struct {
+type RequiredEventsRes struct {
 	Events []events.EventInfo `json:"events"`
 }

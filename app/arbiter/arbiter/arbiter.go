@@ -29,7 +29,7 @@ import (
 	"github.com/BeL2Labs/Arbiter_Signer/app/arbiter/api/mempool"
 	"github.com/BeL2Labs/Arbiter_Signer/app/arbiter/config"
 	"github.com/BeL2Labs/Arbiter_Signer/app/arbiter/contract"
-	"github.com/BeL2Labs/Arbiter_Signer/app/arbiter/contract/events"
+	"github.com/BeL2Labs/Arbiter_Signer/utility/events"
 )
 
 const DELAY_BLOCK uint64 = 3

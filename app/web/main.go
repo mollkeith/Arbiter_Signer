@@ -3,31 +3,42 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
+	"io"
 	"net/http"
+
+	jsonrpc "github.com/BeL2Labs/Arbiter_Signer/app/web/json_rpc"
+	"github.com/BeL2Labs/Arbiter_Signer/utility/events"
 
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
-	"github.com/gogf/gf/util/gconv"
 )
 
-type Event struct {
-	EventID string `json:"event_id"`
-	Height  int64  `json:"height"`
-	OrderID string `json:"order_id"`
-}
-
-func getEvents(url string) ([]Event, error) {
+func getEvents(url string) ([]events.EventInfo, error) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	var events []Event
-	if err := gconv.Scan(resp.Body, &events); err != nil {
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
 		return nil, err
 	}
-	return events, nil
+
+	eventsResp := jsonrpc.EventInfoResponse{}
+	if err := json.Unmarshal(body, &eventsResp); err != nil {
+		return nil, err
+	}
+	fmt.Println("eventResp:", eventsResp)
+	if eventsResp.Code != 0 {
+		return nil, fmt.Errorf("failed to get events: %s", eventsResp.Message)
+	}
+
+	return eventsResp.Data.Events, nil
 }
+
 func indexHandler(r *ghttp.Request) {
 	r.Response.WriteTpl("static/index.html")
 }
@@ -36,11 +47,13 @@ func apiHandler(r *ghttp.Request) {
 	var url string
 	switch action {
 	case "getSucceedEvents":
-		url = "https://127.0.0.1:8000/getSucceedEvents"
+		url = "http://127.0.0.1:8000/succeed_events"
 	case "getFailedEvents":
-		url = "https://127.0.0.1:8000/getFailedEvents"
+		url = "http://127.0.0.1:8000/failed_events"
+	case "getRequiredEvents":
+		url = "http://127.0.0.1:8000/required_events"
 	case "getAllEvents":
-		url = "https://127.0.0.1:8000/getAllEvents"
+		url = "http://127.0.0.1:8000/events"
 	default:
 		r.Response.WriteJson(g.Map{"error": "invalid action"})
 		return

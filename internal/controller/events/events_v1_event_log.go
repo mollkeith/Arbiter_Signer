@@ -9,6 +9,6 @@ import (
 	"github.com/BeL2Labs/Arbiter_Signer/api/events/v1"
 )
 
-func (c *ControllerV1) Events(ctx context.Context, req *v1.EventsReq) (res *v1.EventsRes, err error) {
+func (c *ControllerV1) EventLog(ctx context.Context, req *v1.EventLogReq) (res *v1.EventLogRes, err error) {
 	return nil, gerror.NewCode(gcode.CodeNotImplemented)
 }

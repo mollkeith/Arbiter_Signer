@@ -9,27 +9,27 @@ import (
 	"github.com/BeL2Labs/Arbiter_Signer/internal/consts"
 	"github.com/BeL2Labs/Arbiter_Signer/utility/contract_abi"
 	"github.com/BeL2Labs/Arbiter_Signer/utility/events"
+	"github.com/gogf/gf/frame/g"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/gogf/gf/frame/g"
 )
 
-func (c *ControllerV1) SucceedEvents(ctx context.Context, req *v1.SucceedEventsReq) (res *v1.SucceedEventsRes, err error) {
+func (c *ControllerV1) RequiredEvents(ctx context.Context, req *v1.RequiredEventsReq) (res *v1.RequiredEventsRes, err error) {
 	loanABI, err := abi.JSON(strings.NewReader(contract_abi.ArbiterABI))
 	if err != nil {
 		return nil, err
 	}
 
-	filedFilePath := getExpandedPath(consts.SucceedEventFilePath)
-	failedFiles, err := os.ReadDir(filedFilePath)
+	reqiredFilePath := getExpandedPath(consts.RequestEventFilePath)
+	reqiredFiles, err := os.ReadDir(reqiredFilePath)
 	if err != nil {
 		return nil, err
 	}
 
 	evs := make([]events.EventInfo, 0)
-	for _, file := range failedFiles {
-		filePath := filedFilePath + "/" + file.Name()
+	for _, file := range reqiredFiles {
+		filePath := reqiredFilePath + "/" + file.Name()
 		fileContent, err := os.ReadFile(filePath)
 		if err != nil {
 			g.Log().Error(ctx, "read file:", filePath, "error:", err)
@@ -55,18 +55,13 @@ func (c *ControllerV1) SucceedEvents(ctx context.Context, req *v1.SucceedEventsR
 
 		evs = append(evs, events.EventInfo{
 			EventName:         "ArbitrationRequested",
+			Block:             logEvt.Block,
 			EventID:           logEvt.TxHash.String(),
 			QueryID:           queryId.String(),
-			Block:             logEvt.Block,
 			ArbitratorAddress: arbitratorAddress.String(),
 			DappAddress:       dappAddress.String(),
-			Status:            "succeed",
+			Status:            "required",
 		})
-
 	}
-
-	res = &v1.SucceedEventsRes{
-		Events: evs,
-	}
-	return res, nil
+	return &v1.RequiredEventsRes{Events: evs}, nil
 }
