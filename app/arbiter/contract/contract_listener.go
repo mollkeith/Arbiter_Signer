@@ -60,6 +60,8 @@ func (c *ContractListener) Start(startHeight uint64) (uint64, error) {
 		err = c.filterLoanEvent(loanQuery)
 		if err != nil {
 			g.Log().Error(c.ctx, "filter filterLoanEvent failed, error:", err)
+			toBlock--
+			break
 		}
 	}
 	return toBlock, nil
