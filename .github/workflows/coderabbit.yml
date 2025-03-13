@@ -15,6 +15,14 @@ jobs:
   review:
     runs-on: ubuntu-latest
     steps:
+      - name: Debug Environment Variables
+        run: |
+          echo "GITHUB_TOKEN is set"
+          echo "OPENAI_API_KEY is set to $OPENAI_API_KEY"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.ALVA_OAI_TOKEN }}
+          
       - uses: coderabbitai/ai-pr-reviewer@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
