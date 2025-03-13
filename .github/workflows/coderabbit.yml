@@ -23,6 +23,6 @@ jobs:
           debug: false
           review_simple_changes: false
           review_comment_lgtm: false
-          language: zh-EN
+          language: en-US
           openai_light_model: gpt-4o-mini
           openai_heavy_model: gpt-4o
