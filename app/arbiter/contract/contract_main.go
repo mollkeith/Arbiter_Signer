@@ -68,7 +68,7 @@ func New(ctx context.Context, cfg *config.Config, privateKey string, logger *log
 	if err != nil {
 		return nil, err
 	}
-	loanAddress := common.HexToAddress(cfg.ESCArbiterContractAddress)
+	loanAddress := common.HexToAddress(cfg.ESCTransactionManagerContractAddress)
 	arbiterManagerAddress := common.HexToAddress(cfg.ESCArbiterManagerContractAddress)
 	configManagerAddress := common.HexToAddress(cfg.ESCConfigManagerContractAddress)
 	orderManangerAddress := common.HexToAddress(cfg.ESCOrderManagerContractAddress)
