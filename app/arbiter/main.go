@@ -86,7 +86,7 @@ func initConfig(ctx context.Context) *config.Config {
 		g.Log().Error(ctx, "get escStartHeight config err:", err)
 		os.Exit(1)
 	}
-	escArbiterContractAddress, err := g.Cfg().Get(ctx, "arbiter.escArbiterContractAddress")
+	escTransactionManagerContractAddress, err := g.Cfg().Get(ctx, "arbiter.escTransactionManagerContractAddress")
 	if err != nil {
 		g.Log().Error(ctx, "get escArbiterAddress config err:", err)
 		os.Exit(1)
@@ -128,8 +128,10 @@ func initConfig(ctx context.Context) *config.Config {
 	g.Log().Info(ctx, "listener:", listener)
 	g.Log().Info(ctx, "http:", http)
 	g.Log().Info(ctx, "escStartHeight:", escStartHeight)
-	g.Log().Info(ctx, "escArbiterContractAddress:", escArbiterContractAddress)
+	g.Log().Info(ctx, "escTransactionManagerContractAddress:", escTransactionManagerContractAddress)
 	g.Log().Info(ctx, "escArbiterManagerAddress:", escArbiterManagerAddress)
+	g.Log().Info(ctx, "escConfigManagerAddress:", escConfigManagerAddress)
+	g.Log().Info(ctx, "escOrderManagerAddress:", escOrderManagerAddress)
 	g.Log().Info(ctx, "escArbiterAddress:", escArbiterAddress)
 	g.Log().Info(ctx, "dataPath:", dataPath)
 	g.Log().Info(ctx, "keyFilePath:", keyFilePath)
@@ -146,16 +148,16 @@ func initConfig(ctx context.Context) *config.Config {
 	LoanSignedEventPath := gfile.Join(dataPath, "loan_signed_event/")
 
 	return &config.Config{
-		Network:                          network.String(),
-		Signer:                           signer.Bool(),
-		Listener:                         listener.Bool(),
-		Http:                             http.String(),
-		ESCStartHeight:                   escStartHeight.Uint64(),
-		ESCArbiterContractAddress:        escArbiterContractAddress.String(),
-		ESCArbiterManagerContractAddress: escArbiterManagerAddress.String(),
-		ESCConfigManagerContractAddress:  escConfigManagerAddress.String(),
-		ESCOrderManagerContractAddress:   escOrderManagerAddress.String(),
-		ESCArbiterAddress:                escArbiterAddress.String(),
+		Network:                              network.String(),
+		Signer:                               signer.Bool(),
+		Listener:                             listener.Bool(),
+		Http:                                 http.String(),
+		ESCStartHeight:                       escStartHeight.Uint64(),
+		ESCTransactionManagerContractAddress: escTransactionManagerContractAddress.String(),
+		ESCArbiterManagerContractAddress:     escArbiterManagerAddress.String(),
+		ESCConfigManagerContractAddress:      escConfigManagerAddress.String(),
+		ESCOrderManagerContractAddress:       escOrderManagerAddress.String(),
+		ESCArbiterAddress:                    escArbiterAddress.String(),
 
 		DataDir:            dataPath,
 		EscKeyFilePath:     escKeyFilePath,

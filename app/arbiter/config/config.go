@@ -8,13 +8,13 @@ type Config struct {
 	Signer   bool
 	Listener bool
 
-	Http                             string
-	ESCStartHeight                   uint64
-	ESCArbiterContractAddress        string
-	ESCArbiterManagerContractAddress string
-	ESCConfigManagerContractAddress  string
-	ESCOrderManagerContractAddress   string
-	ESCArbiterAddress                string
+	Http                                 string
+	ESCStartHeight                       uint64
+	ESCTransactionManagerContractAddress string
+	ESCArbiterManagerContractAddress     string
+	ESCConfigManagerContractAddress      string
+	ESCOrderManagerContractAddress       string
+	ESCArbiterAddress                    string
 
 	DataDir            string
 	EscKeyFilePath     string
