@@ -63,6 +63,7 @@ $ make
      escArbiterContractAddress: "0xD206be45b53Fa5C2065049c7a70B1aa1755a9475"
      escArbiterManagerContractAddress: "0x54eE4fc8951A936b6AA02079B76c497c0471c52A"
      escConfigManagerContractAddress: "0x4421c63241A262C423277FFA82C376953072d25f"
+     escOrderManagerContractAddress: "0x1f00FEE6B4dbbc97B8c035E1813772C38E64081d"
      escArbiterAddress: "0x0262aB0ED65373cC855C34529fDdeAa0e686D913"
      dataPath: "~/loan_arbiter/data"
      keyFilePath: "~/loan_arbiter/keys"
