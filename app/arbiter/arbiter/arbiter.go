@@ -96,7 +96,8 @@ func NewArbiter(ctx context.Context, config *config.Config, password string) *Ar
 func (v *Arbiter) Start() {
 	if v.config.Signer {
 		go v.processArbiterSig()
-		go v.processManualConfirm()
+		// temp we don't need to process manually confirm
+		// go v.processManualConfirm()
 	}
 
 	if v.config.Listener {
@@ -514,12 +515,12 @@ func createDir(config *config.Config) error {
 		}
 	}
 
-	if !gfile.Exists(config.LoanManuallyConfirmedPath) {
-		err := gfile.Mkdir(config.LoanManuallyConfirmedPath)
-		if err != nil {
-			return err
-		}
-	}
+	// if !gfile.Exists(config.LoanManuallyConfirmedPath) {
+	// 	err := gfile.Mkdir(config.LoanManuallyConfirmedPath)
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// }
 
 	if !gfile.Exists(config.LoanLogPath) {
 		err := gfile.Mkdir(config.LoanLogPath)

@@ -37,7 +37,6 @@ type ArbitratorContract struct {
 	loanContract           *common.Address
 	arbiterManagerContract *common.Address
 	configManagerContract  *common.Address
-	orderManagerContract   *common.Address
 	cfg                    *config.Config
 
 	logger *log.Logger
@@ -71,10 +70,9 @@ func New(ctx context.Context, cfg *config.Config, privateKey string, logger *log
 	loanAddress := common.HexToAddress(cfg.ESCTransactionManagerContractAddress)
 	arbiterManagerAddress := common.HexToAddress(cfg.ESCArbiterManagerContractAddress)
 	configManagerAddress := common.HexToAddress(cfg.ESCConfigManagerContractAddress)
-	orderManangerAddress := common.HexToAddress(cfg.ESCOrderManagerContractAddress)
 	eventChan := make(chan *events.ContractLogEvent, 3)
 	chan_interrupt := make(chan struct{})
-	listener, err := NewListener(ctx, client, loanAddress, orderManangerAddress, eventChan)
+	listener, err := NewListener(ctx, client, loanAddress, eventChan)
 	if err != nil {
 		return nil, err
 	}
@@ -112,7 +110,6 @@ func New(ctx context.Context, cfg *config.Config, privateKey string, logger *log
 		loanContract:           &loanAddress,
 		arbiterManagerContract: &arbiterManagerAddress,
 		configManagerContract:  &configManagerAddress,
-		orderManagerContract:   &orderManangerAddress,
 		cfg:                    cfg,
 		logger:                 logger,
 	}
