@@ -106,11 +106,6 @@ func initConfig(ctx context.Context) *config.Config {
 		g.Log().Error(ctx, "get escArbiterAddress config err:", err)
 		os.Exit(1)
 	}
-	escOrderManagerAddress, err := g.Cfg().Get(ctx, "arbiter.escOrderManagerContractAddress")
-	if err != nil {
-		g.Log().Error(ctx, "get escOrderManagerAddress config err:", err)
-		os.Exit(1)
-	}
 	gDataPath, err := g.Cfg().Get(ctx, "arbiter.dataPath")
 	if err != nil {
 		g.Log().Error(ctx, "get dataPath config err:", err)
@@ -131,7 +126,6 @@ func initConfig(ctx context.Context) *config.Config {
 	g.Log().Info(ctx, "escTransactionManagerContractAddress:", escTransactionManagerContractAddress)
 	g.Log().Info(ctx, "escArbiterManagerAddress:", escArbiterManagerAddress)
 	g.Log().Info(ctx, "escConfigManagerAddress:", escConfigManagerAddress)
-	g.Log().Info(ctx, "escOrderManagerAddress:", escOrderManagerAddress)
 	g.Log().Info(ctx, "escArbiterAddress:", escArbiterAddress)
 	g.Log().Info(ctx, "dataPath:", dataPath)
 	g.Log().Info(ctx, "keyFilePath:", keyFilePath)
@@ -156,7 +150,6 @@ func initConfig(ctx context.Context) *config.Config {
 		ESCTransactionManagerContractAddress: escTransactionManagerContractAddress.String(),
 		ESCArbiterManagerContractAddress:     escArbiterManagerAddress.String(),
 		ESCConfigManagerContractAddress:      escConfigManagerAddress.String(),
-		ESCOrderManagerContractAddress:       escOrderManagerAddress.String(),
 		ESCArbiterAddress:                    escArbiterAddress.String(),
 
 		DataDir:            dataPath,

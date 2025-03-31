@@ -13,7 +13,6 @@ type Config struct {
 	ESCTransactionManagerContractAddress string
 	ESCArbiterManagerContractAddress     string
 	ESCConfigManagerContractAddress      string
-	ESCOrderManagerContractAddress       string
 	ESCArbiterAddress                    string
 
 	DataDir            string
