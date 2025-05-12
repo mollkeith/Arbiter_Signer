@@ -389,19 +389,21 @@ func (v *Arbiter) processArbiterSig() {
 			preAmount := int64(preTx.Vout[input.PreviousOutPoint.Index].Value)
 
 			// check fee rate
-			feeRate, err := v.escNode.GetArbitrationBTCFeeRate()
+			feeRate, err := v.escNode.GetArbitrationBTCFeeRate(arbiterAddress)
 			if err != nil {
 				g.Log().Error(v.ctx, "GetArbitrationBTCFeeRate error", err)
 				v.moveToDirectory(filePath, v.config.LoanNeedSignFailedPath+"/"+file.Name()+".GetArbitrationBTCFeeRateFailed")
 				v.logger.Println("[ERR]  SIGN: get fee rate failed, block:", logEvt.Block, "tx:", logEvt.TxHash)
 				continue
 			}
-			arbiterFee := preAmount * feeRate.Int64() / 10000
-			if tx.TxOut[arbiterFeeVoutIndex].Value < arbiterFee {
-				g.Log().Error(v.ctx, "invalid fee rate", feeRate)
-				v.moveToDirectory(filePath, v.config.LoanNeedSignFailedPath+"/"+file.Name()+".invalidFeeRate")
-				v.logger.Println("[ERR]  SIGN: invalid fee rate, block:", logEvt.Block, "tx:", logEvt.TxHash)
-				continue
+			if feeRate.Int64() > 0 {
+				arbiterFee := preAmount * feeRate.Int64() / 10000
+				if tx.TxOut[arbiterFeeVoutIndex].Value < arbiterFee {
+					g.Log().Error(v.ctx, "invalid fee rate", feeRate)
+					v.moveToDirectory(filePath, v.config.LoanNeedSignFailedPath+"/"+file.Name()+".invalidFeeRate")
+					v.logger.Println("[ERR]  SIGN: invalid fee rate, block:", logEvt.Block, "tx:", logEvt.TxHash)
+					continue
+				}
 			}
 
 			// check utxo address

@@ -3,32 +3,6 @@
 package contract_abi
 
 const ArbiterManagerABI = `[
-{
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "arbitrator",
-          "type": "address"
-        }
-      ],
-      "name": "getArbitratorInfoExt",
-      "outputs": [
-        {
-          "components": [
-            {
-              "internalType": "uint256",
-              "name": "currentBTCFeeRate",
-              "type": "uint256"
-            }
-          ],
-          "internalType": "struct DataTypes.ArbitratorInfoExt",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
     {
       "inputs": [],
       "stateMutability": "nonpayable",
@@ -102,7 +76,13 @@ const ArbiterManagerABI = `[
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "feeRate",
+          "name": "ethFeeRate",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "btcFeeRate",
           "type": "uint256"
         }
       ],
@@ -172,6 +152,12 @@ const ArbiterManagerABI = `[
           "indexed": false,
           "internalType": "uint256",
           "name": "feeRate",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "btcFeeRate",
           "type": "uint256"
         },
         {
@@ -254,6 +240,19 @@ const ArbiterManagerABI = `[
         {
           "indexed": true,
           "internalType": "address",
+          "name": "assetManager",
+          "type": "address"
+        }
+      ],
+      "name": "AssetManagerUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
           "name": "oldManager",
           "type": "address"
         },
@@ -271,6 +270,19 @@ const ArbiterManagerABI = `[
       "anonymous": false,
       "inputs": [
         {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newConfigManager",
+          "type": "address"
+        }
+      ],
+      "name": "ConfigManagerUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
           "indexed": false,
           "internalType": "uint64",
           "name": "version",
@@ -278,44 +290,6 @@ const ArbiterManagerABI = `[
         }
       ],
       "name": "Initialized",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "transactionManager",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "compensationManager",
-          "type": "address"
-        }
-      ],
-      "name": "InitializedManager",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "oldNFTContract",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "newNFTContract",
-          "type": "address"
-        }
-      ],
-      "name": "NFTContractUpdated",
       "type": "event"
     },
     {
@@ -440,16 +414,34 @@ const ArbiterManagerABI = `[
           "type": "address"
         },
         {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "ethAmount",
+          "type": "uint256"
+        },
+        {
           "indexed": true,
           "internalType": "address",
-          "name": "assetAddress",
+          "name": "erc20Address",
           "type": "address"
         },
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "amount",
+          "name": "erc20Amount",
           "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "nftAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256[]",
+          "name": "nftTokenIds",
+          "type": "uint256[]"
         }
       ],
       "name": "StakeWithdrawn",
@@ -473,6 +465,19 @@ const ArbiterManagerABI = `[
       ],
       "name": "TransactionManagerUpdated",
       "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "assetManager",
+      "outputs": [
+        {
+          "internalType": "contract AssetManager",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
     },
     {
       "inputs": [],
@@ -517,11 +522,57 @@ const ArbiterManagerABI = `[
       "inputs": [
         {
           "internalType": "address",
-          "name": "arbitratorAddress",
+          "name": "arbitrator",
           "type": "address"
         }
       ],
-      "name": "getArbitratorInfo",
+      "name": "getArbitratorAssets",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "ethAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "erc20Token",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "erc20Amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "nftContract",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256[]",
+              "name": "nftTokenIds",
+              "type": "uint256[]"
+            }
+          ],
+          "internalType": "struct DataTypes.ArbitratorAssets",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "arbitrator",
+          "type": "address"
+        }
+      ],
+      "name": "getArbitratorBasicInfo",
       "outputs": [
         {
           "components": [
@@ -537,34 +588,35 @@ const ArbiterManagerABI = `[
             },
             {
               "internalType": "uint256",
-              "name": "currentFeeRate",
+              "name": "registerTime",
               "type": "uint256"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "activeTransactionId",
-              "type": "bytes32"
             },
             {
               "internalType": "uint256",
-              "name": "ethAmount",
+              "name": "deadline",
               "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "erc20Token",
-              "type": "address"
-            },
-            {
-              "internalType": "address",
-              "name": "nftContract",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256[]",
-              "name": "nftTokenIds",
-              "type": "uint256[]"
-            },
+            }
+          ],
+          "internalType": "struct DataTypes.ArbitratorBasicInfo",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "arbitrator",
+          "type": "address"
+        }
+      ],
+      "name": "getArbitratorOperationInfo",
+      "outputs": [
+        {
+          "components": [
             {
               "internalType": "address",
               "name": "operator",
@@ -581,8 +633,44 @@ const ArbiterManagerABI = `[
               "type": "string"
             },
             {
+              "internalType": "bytes32",
+              "name": "activeTransactionId",
+              "type": "bytes32"
+            },
+            {
               "internalType": "uint256",
-              "name": "deadLine",
+              "name": "lastSubmittedWorkTime",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct DataTypes.ArbitratorOperationInfo",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "arbitrator",
+          "type": "address"
+        }
+      ],
+      "name": "getArbitratorRevenueInfo",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "currentFeeRate",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "currentBTCFeeRate",
               "type": "uint256"
             },
             {
@@ -599,14 +687,9 @@ const ArbiterManagerABI = `[
               "internalType": "address",
               "name": "revenueETHAddress",
               "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "lastSubmittedWorkTime",
-              "type": "uint256"
             }
           ],
-          "internalType": "struct DataTypes.ArbitratorInfo",
+          "internalType": "struct DataTypes.ArbitratorRevenueInfo",
           "name": "",
           "type": "tuple"
         }
@@ -636,16 +719,45 @@ const ArbiterManagerABI = `[
     {
       "inputs": [
         {
+          "internalType": "uint256",
+          "name": "duration",
+          "type": "uint256"
+        },
+        {
           "internalType": "address",
           "name": "arbitrator",
           "type": "address"
         }
       ],
-      "name": "getTotalNFTStakeValue",
+      "name": "getBtcFee",
       "outputs": [
         {
           "internalType": "uint256",
-          "name": "",
+          "name": "fee",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "duration",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "arbitrator",
+          "type": "address"
+        }
+      ],
+      "name": "getFee",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "fee",
           "type": "uint256"
         }
       ],
@@ -656,35 +768,7 @@ const ArbiterManagerABI = `[
       "inputs": [
         {
           "internalType": "address",
-          "name": "_transactionManager",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_compensationManager",
-          "type": "address"
-        }
-      ],
-      "name": "initTransactionAndCompensationManager",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
           "name": "_configManager",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_nftContract",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_nftInfo",
           "type": "address"
         }
       ],
@@ -795,32 +879,6 @@ const ArbiterManagerABI = `[
     },
     {
       "inputs": [],
-      "name": "nftContract",
-      "outputs": [
-        {
-          "internalType": "contract IERC721",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "nftInfo",
-      "outputs": [
-        {
-          "internalType": "contract IBNFTInfo",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
       "name": "owner",
       "outputs": [
         {
@@ -842,6 +900,16 @@ const ArbiterManagerABI = `[
     {
       "inputs": [
         {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
           "internalType": "string",
           "name": "defaultBtcAddress",
           "type": "string"
@@ -854,6 +922,44 @@ const ArbiterManagerABI = `[
         {
           "internalType": "uint256",
           "name": "feeRate",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "btcFeeRate",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "deadline",
+          "type": "uint256"
+        }
+      ],
+      "name": "registerArbitratorByStakeERC20",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "defaultBtcAddress",
+          "type": "string"
+        },
+        {
+          "internalType": "bytes",
+          "name": "defaultBtcPubKey",
+          "type": "bytes"
+        },
+        {
+          "internalType": "uint256",
+          "name": "feeRate",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "btcFeeRate",
           "type": "uint256"
         },
         {
@@ -887,6 +993,11 @@ const ArbiterManagerABI = `[
         {
           "internalType": "uint256",
           "name": "feeRate",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "btcFeeRate",
           "type": "uint256"
         },
         {
@@ -941,19 +1052,6 @@ const ArbiterManagerABI = `[
     {
       "inputs": [
         {
-          "internalType": "uint256",
-          "name": "feeRate",
-          "type": "uint256"
-        }
-      ],
-      "name": "setArbitratorFeeRate",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
           "internalType": "address",
           "name": "arbitrator",
           "type": "address"
@@ -965,6 +1063,19 @@ const ArbiterManagerABI = `[
         }
       ],
       "name": "setArbitratorWorking",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_assetManager",
+          "type": "address"
+        }
+      ],
+      "name": "setAssetManager",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -986,11 +1097,29 @@ const ArbiterManagerABI = `[
       "inputs": [
         {
           "internalType": "address",
-          "name": "_nftContract",
+          "name": "_configManager",
           "type": "address"
         }
       ],
-      "name": "setNFTContract",
+      "name": "setConfigManager",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "ethFeeRate",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "btcFeeRate",
+          "type": "uint256"
+        }
+      ],
+      "name": "setFeeRates",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -1050,6 +1179,24 @@ const ArbiterManagerABI = `[
         }
       ],
       "name": "setTransactionManager",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "stakeERC20",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -1125,19 +1272,6 @@ const ArbiterManagerABI = `[
       "name": "unstake",
       "outputs": [],
       "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "zeroAddress",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
       "type": "function"
     }
   ]`

@@ -43,23 +43,42 @@ type ArbitratorContract struct {
 }
 
 // ArbitratorStatus should be defined according to the possible statuses you have.
-type ArbitratorInfo struct {
-	Arbitrator            string   // Arbitrator Ethereum address
-	Paused                bool     // Paused
-	CurrentFeeRate        *big.Int // Current fee rate
-	ActiveTransactionID   [32]byte // Current transaction ID (bytes32)
-	EthAmount             *big.Int // ETH stake amount
-	Erc20Token            string   // ERC20 token address
-	NftContract           string   // NFT contract address
-	NftTokenIds           []uint64 // NFT token IDs
-	Operator              string   // Operator address
-	OperatorBtcPubKey     []byte   // Bitcoin public key
-	OperatorBtcAddress    string   // Bitcoin address
-	Deadline              *big.Int // Last arbitration time , deadline
-	RevenueBtcPubKey      []byte   // Bitcoin public key for receiving arbitrator earnings
-	RevenueBtcAddress     string   // Bitcoin address for receiving arbitrator earnings
-	RevenueETHAddress     string   // ETH address for receiving arbitrator earnings
+type ArbitratorOperatorInfo struct {
+	// Arbitrator            string   // Arbitrator Ethereum address
+	// Paused                bool     // Paused
+	// CurrentFeeRate        *big.Int // Current fee rate
+	ActiveTransactionID [32]byte // Current transaction ID (bytes32)
+	// EthAmount             *big.Int // ETH stake amount
+	// Erc20Token            string   // ERC20 token address
+	// NftContract           string   // NFT contract address
+	// NftTokenIds           []uint64 // NFT token IDs
+	Operator           string // Operator address
+	OperatorBtcPubKey  []byte // Bitcoin public key
+	OperatorBtcAddress string // Bitcoin address
+	// Deadline              *big.Int // Last arbitration time , deadline
+	// RevenueBtcPubKey      []byte   // Bitcoin public key for receiving arbitrator earnings
+	// RevenueBtcAddress     string   // Bitcoin address for receiving arbitrator earnings
+	// RevenueETHAddress     string   // ETH address for receiving arbitrator earnings
 	LastSubmittedWorkTime *big.Int // Last submitted work time
+}
+type ArbitratorRevenueInfo struct {
+	// Arbitrator            string   // Arbitrator Ethereum address
+	// Paused                bool     // Paused
+	CurrentFeeRate    *big.Int // Current fee rate
+	CurrentBtcFeeRate *big.Int // Current btc fee rate
+	// ActiveTransactionID [32]byte // Current transaction ID (bytes32)
+	// EthAmount             *big.Int // ETH stake amount
+	// Erc20Token            string   // ERC20 token address
+	// NftContract           string   // NFT contract address
+	// NftTokenIds           []uint64 // NFT token IDs
+	// Operator           string // Operator address
+	// OperatorBtcPubKey  []byte // Bitcoin public key
+	// OperatorBtcAddress string // Bitcoin address
+	// Deadline              *big.Int // Last arbitration time , deadline
+	RevenueBtcPubKey  []byte // Bitcoin public key for receiving arbitrator earnings
+	RevenueBtcAddress string // Bitcoin address for receiving arbitrator earnings
+	RevenueETHAddress string // ETH address for receiving arbitrator earnings
+	// LastSubmittedWorkTime *big.Int // Last submitted work time
 }
 
 func New(ctx context.Context, cfg *config.Config, privateKey string, logger *log.Logger) (*ArbitratorContract, error) {
@@ -269,7 +288,7 @@ func (c *ArbitratorContract) SubmitArbitrationSignature(rawData []byte, queryId 
 }
 
 func (c *ArbitratorContract) getArbiterOperatorAddress(arbiter common.Address) (common.Address, error) {
-	input, err := c.Arbiter_manager_abi.Pack("getArbitratorInfo", arbiter)
+	input, err := c.Arbiter_manager_abi.Pack("getArbitratorOperationInfo", arbiter)
 	if err != nil {
 		return common.Address{}, err
 	}
@@ -279,12 +298,12 @@ func (c *ArbitratorContract) getArbiterOperatorAddress(arbiter common.Address) (
 	if err != nil {
 		return common.Address{}, err
 	}
-	ev, err := c.Arbiter_manager_abi.Unpack("getArbitratorInfo", result)
+	ev, err := c.Arbiter_manager_abi.Unpack("getArbitratorOperationInfo", result)
 	if err != nil || len(ev) == 0 {
 		g.Log().Error(c.ctx, "parse ArbitratorInfo UnpackIntoMap error", err)
 		return common.Address{}, err
 	}
-	info := ArbitratorInfo{}
+	info := ArbitratorOperatorInfo{}
 	data, err := json.Marshal(ev[0])
 	if err != nil {
 		return common.Address{}, err
@@ -295,7 +314,7 @@ func (c *ArbitratorContract) getArbiterOperatorAddress(arbiter common.Address) (
 }
 
 func (c *ArbitratorContract) GetArbiterBTCAddress(arbiter common.Address) (string, error) {
-	input, err := c.Arbiter_manager_abi.Pack("getArbitratorInfo", arbiter)
+	input, err := c.Arbiter_manager_abi.Pack("getArbitratorRevenueInfo", arbiter)
 	if err != nil {
 		return "", err
 	}
@@ -305,12 +324,12 @@ func (c *ArbitratorContract) GetArbiterBTCAddress(arbiter common.Address) (strin
 	if err != nil {
 		return "", err
 	}
-	ev, err := c.Arbiter_manager_abi.Unpack("getArbitratorInfo", result)
+	ev, err := c.Arbiter_manager_abi.Unpack("getArbitratorRevenueInfo", result)
 	if err != nil || len(ev) == 0 {
-		g.Log().Error(c.ctx, "parse ArbitratorInfo UnpackIntoMap error", err)
+		g.Log().Error(c.ctx, "parse ArbitratorOperatorInfo UnpackIntoMap error", err)
 		return "", err
 	}
-	info := ArbitratorInfo{}
+	info := ArbitratorRevenueInfo{}
 	data, err := json.Marshal(ev[0])
 	if err != nil {
 		return "", err
@@ -320,17 +339,30 @@ func (c *ArbitratorContract) GetArbiterBTCAddress(arbiter common.Address) (strin
 	return info.RevenueBtcAddress, nil
 }
 
-func (c *ArbitratorContract) GetArbitrationBTCFeeRate() (*big.Int, error) {
-	input, err := c.Arbiter_config_abi.Pack("getArbitrationBTCFeeRate")
+func (c *ArbitratorContract) GetArbitrationBTCFeeRate(arbiter common.Address) (*big.Int, error) {
+	input, err := c.Arbiter_manager_abi.Pack("getArbitratorRevenueInfo", arbiter)
 	if err != nil {
 		return nil, err
 	}
-	msg := ethereum.CallMsg{From: common.Address{}, To: c.configManagerContract, Data: input}
+	// use c.arbiterManagerContract to call get getArbitratorInfo operator address
+	msg := ethereum.CallMsg{From: common.Address{}, To: c.arbiterManagerContract, Data: input}
 	result, err := c.submitter.CallContract(context.TODO(), msg, nil)
 	if err != nil {
 		return nil, err
 	}
-	return big.NewInt(0).SetBytes(result), nil
+	ev, err := c.Arbiter_manager_abi.Unpack("getArbitratorRevenueInfo", result)
+	if err != nil || len(ev) == 0 {
+		g.Log().Error(c.ctx, "parse GetArbitrationBTCFeeRate UnpackIntoMap error", err)
+		return nil, err
+	}
+	info := ArbitratorRevenueInfo{}
+	data, err := json.Marshal(ev[0])
+	if err != nil {
+		return nil, err
+	}
+	json.Unmarshal(data, &info)
+
+	return info.CurrentBtcFeeRate, nil
 }
 
 type ManuallyConfirmedBTCFeeRate struct {
